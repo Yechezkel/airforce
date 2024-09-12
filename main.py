@@ -1,4 +1,4 @@
-import aircraftModel , pilotModel, attackModel, targetModel, csv
+import aircraftModel , pilotModel, attackModel, targetModel, csv, services as sv
 from jsonService import load_json
 
 path_pilots = 'pilots.json'
@@ -65,24 +65,16 @@ while True:
             print("An error occurred, The files didn't load successfully.")
 
     elif choice == "2":
-        print("Pilots:")
-        for pilot in pilot_models_list:
-            print(pilot.get_string())
+        sv.print_list_models("Pilots:",pilot_models_list)
 
     elif choice == "3":
-        print("AirCrafts:")
-        for aircraft in aircraft_models_list:
-            print(aircraft.get_string())
+        sv.print_list_models("AirCrafts:", aircraft_models_list)
 
     elif choice == "4":
-        print("Targets:")
-        for target in target_models_list:
-            print(target.get_string())
+        sv.print_list_models("Targets:", target_models_list)
 
     elif choice == "5":
-        print("Attacks:")
-        for attack in attack_model_list:
-            print(attack.get_string())
+        sv.print_list_models("Attacks:", attack_model_list)
 
     elif choice == "6":
         try:
