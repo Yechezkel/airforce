@@ -6,4 +6,4 @@ class Aircraft:
         self.fuel_capacity = fuel_capacity
 
     def get_string(self):
-        return f"name: {self.type}, skill level: {self.speed}, fuel capacity: {self.fuel_capacity}."
+        return f"name: {self.type},   skill level: {self.speed},   fuel capacity: {self.fuel_capacity}."

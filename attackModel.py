@@ -17,17 +17,16 @@ class Attack:
 
     def get_string(self):
         return (
-            f"Target City: {self.target_city}\n"
-            f"Priority: {self.priority}\n"
-            f"Assigned Pilot: {self.assigned_pilot}\n"
-            f"Assigned Aircraft: {self.assigned_aircraft}\n"
-            f"Distance: {self.distance} km\n"
-            f"Weather Conditions: {self.weather_conditions}\n"
-            f"Pilot Skill: {self.pilot_skill}\n"
-            f"Aircraft Speed: {self.aircraft_speed} km/h\n"
-            f"Aircraft Fuel Capacity: {self.aircraft_fuel_Capacity} liters\n"
-            f"Mission Fit Score: {self.mission_fit_score}\n"
-            f"\n"
+            f"Target City: {self.target_city},   "
+            f"Priority: {self.priority},  "
+            f"Assigned Pilot: {self.assigned_pilot},   "
+            f"Assigned Aircraft: {self.assigned_aircraft},   "
+            f"Distance: {self.distance},  "
+            f"Weather Conditions: {self.weather_conditions},   "
+            f"Pilot Skill: {self.pilot_skill},   "
+            f"Aircraft Speed: {self.aircraft_speed},   "
+            f"Aircraft Fuel Capacity: {self.aircraft_fuel_Capacity},   "
+            f"Mission Fit Score: {self.mission_fit_score}."
         )
 
     def get_mission_fit_score(self):

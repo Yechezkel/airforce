@@ -5,4 +5,4 @@ class Pilot:
         self.skill_level = skill_level
 
     def get_string(self):
-        return f"name: {self.name}, skill level: {self.skill_level}."
+        return f"name: {self.name},   skill level: {self.skill_level}."

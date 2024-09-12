@@ -11,12 +11,13 @@ class Target:
 
 
     def get_string(self):
-        return f"city: {self.city}, priority: {self.priority}, distance: {self.distance}, forecast: {self.weather_score}."
+        return f"city: {self.city},   priority: {self.priority},   distance: {self.distance},   forecast: {self.weather_score}."
 
 
     def add_distance_and_weather(self):
         data = cityDataServices.get_city_data(self.city)
         self.distance = data["distance"]
         self.weather_score = data["weather_score"]
+        return self
 
 

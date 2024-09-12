@@ -1,8 +1,5 @@
-import json, aircraftModel , pilotModel, attackModel, targetModel, csv
-
-def load_json(path):
-    with open(path, 'r') as file:
-        return json.load(file)
+import aircraftModel , pilotModel, attackModel, targetModel, csv
+from jsonService import load_json
 
 path_pilots = 'pilots.json'
 path_aircrafts = 'aircrafts.json'
@@ -11,76 +8,97 @@ pilot_models_list = []
 aircraft_models_list = []
 target_models_list = []
 attack_model_list = []
+laoded_allready = False
 
 
 while True:
-    choice = int(input(
-        "Please choose an action: \n 1 - Load Files \n 2 - Display Attack Recommendation Table \n 3 - Save All Attacks to File \n 4 - Exit \n 5 - Print Aircrafts \n 6 - Print Pilots \n 7 - Print Targets \n: "))
+    choice = input("Please choose an action: \n 1 - Load Files \n 2 - Display Pilots \n 3 - Display Aircrafts \n 4 - Display Targets \n 5 - Display Attacks \n 6 - Save All Attacks to File \n 7 - Exit \n: ")
+    try:
+        num = int(choice)
+        if 6 >= num >= 2 and not laoded_allready:
+            print("The files didn't load yet, You have to load them before trying display or save them.")
+    except:
+        print("Invalid choice. Please try again.")
+        continue
 
-    if choice == 1:
-        pilots_json = load_json(path_pilots)
-        aircrafts_json = load_json(path_aircrafts)
-        targets_json = load_json(path_targets)
+    if choice == "1":
 
-        pilots_list = pilots_json["pilots"]
-        aircrafts_list = aircrafts_json["aircrafts"]
-        targets_list = targets_json["targets"]
+        print("Trying to load")
 
-        pilot_models_list = [pilotModel.Pilot(x["name"], x["skill_level"]) for x in pilots_list]
-        aircraft_models_list = [aircraftModel.Aircraft(x["type"], x["speed"], x["fuel_capacity"]) for x in
-                                aircrafts_list]
-        target_models_list = [targetModel.Target(x["City"], x["Priority"]) for x in targets_list]
+        try:
+            # reading from 3 json files.
+            pilots_json = load_json(path_pilots)
+            aircrafts_json = load_json(path_aircrafts)
+            targets_json = load_json(path_targets)
 
-        # למה זה לא עבד
-        # print (target_models_list[0].add_distance_and_weather.get_string())
-        # מניפולציות על כל מטרה להוסיף לה מרחק וציון מזג אוויר
-        # target_models_list = list(map(lambda t:  t.add_distance_and_weather,target_models_list))
-        for target in target_models_list:
-            target.add_distance_and_weather()
+            # accessing to the data list inside every json.
+            pilots_list = pilots_json["pilots"]
+            aircrafts_list = aircrafts_json["aircrafts"]
+            targets_list = targets_json["targets"]
 
+            # holding the data as lists of the crossponding models instead of lists of dictionaries.
+            pilot_models_list = [pilotModel.Pilot(x["name"], x["skill_level"]) for x in pilots_list]
+            aircraft_models_list = [aircraftModel.Aircraft( x["type"], x["speed"], x["fuel_capacity"] ) for x in aircrafts_list]
+            target_models_list = [targetModel.Target(x["City"], x["Priority"]) for x in targets_list]
 
-        for p in pilot_models_list:
-            for a in aircraft_models_list:
-                for t in target_models_list:
-                    attack = attackModel.Attack(t.city, t.priority, p.name, a.type, t.distance, t.weather_score,
-                                                p.skill_level, a.speed, a.fuel_capacity, -1)
-                    attack.get_mission_fit_score()
-                    attack_model_list.append(attack)
+            # adding the distance and weather score attribute to every item in targets.
+            target_models_list = list( map( lambda t:  t.add_distance_and_weather(), target_models_list))
 
-        attack_model_list.sort(key=lambda x: x.mission_fit_score, reverse=True)
+            # generating the attack offers by every combination of pilot aircraft and target.
+            for p in pilot_models_list:
+                for a in aircraft_models_list:
+                    for t in target_models_list:
+                        attack = attackModel.Attack(t.city, t.priority, p.name, a.type, t.distance, t.weather_score, p.skill_level, a.speed, a.fuel_capacity, -1)
+                        attack.get_mission_fit_score()
+                        attack_model_list.append(attack)
 
+            # sorting the attacks' list by the score in descending order
+            attack_model_list.sort(key=lambda x: x.mission_fit_score, reverse=True)
 
+            # printing a message to the user
+            print("The files loaded successfully.")
+            laoded_allready = True
 
+        except:
 
-    elif choice == 2:
-        for attack in attack_model_list:
-            print(attack.get_string())
+            # printing a message to the user
+            print("An error occurred, The files didn't load successfully.")
 
-    elif choice == 3:
-        csv_path = "attacks.csv"
-        with open(csv_path, mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, fieldnames=attack_model_list[0].convert_to_dict().keys())
-            writer.writeheader()
-            for attack in attack_model_list:
-                writer.writerow(attack.convert_to_dict())
-    elif choice == 4:
-        print("Exiting...")
-        break
-    elif choice == 5:
-        print("AirCrafts:")
-        for aircraft in aircraft_models_list:
-            print(aircraft.get_string())
-
-    elif choice == 6:
+    elif choice == "2":
         print("Pilots:")
         for pilot in pilot_models_list:
             print(pilot.get_string())
 
-    elif choice == 7:
+    elif choice == "3":
+        print("AirCrafts:")
+        for aircraft in aircraft_models_list:
+            print(aircraft.get_string())
+
+    elif choice == "4":
         print("Targets:")
         for target in target_models_list:
             print(target.get_string())
 
+    elif choice == "5":
+        print("Attacks:")
+        for attack in attack_model_list:
+            print(attack.get_string())
+
+    elif choice == "6":
+        try:
+            csv_path = "attacks.csv"
+            with open(csv_path, mode='w', newline='', encoding='utf-8') as file:
+                writer = csv.DictWriter(file, fieldnames=attack_model_list[0].convert_to_dict().keys())
+                writer.writeheader()
+                for attack in attack_model_list:
+                    writer.writerow(attack.convert_to_dict())
+            print(f"The attacks saved successfully at {csv_path}")
+        except:
+            print("An error occurred, The attacks didn't save successfully.")
+
+    elif choice == "7":
+        print("Exiting...")
+        break
 
     else:
         print("Invalid choice. Please try again.")
