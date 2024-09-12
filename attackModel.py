@@ -35,7 +35,7 @@ class Attack:
          score += sc.get_priority_score(self.priority)
          score += sc.get_pilot_skill_score(self.pilot_skill)
          score += sc.get_aircraft_fuel_score(self.aircraft_fuel_Capacity)
-         score += sc.get_weather_conditions_score(1)
+         score += sc.get_weather_conditions_score(self.weather_conditions)
          score += sc.get_execution_time_score()
          self.mission_fit_score = score
 
